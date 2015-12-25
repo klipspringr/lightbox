@@ -14,10 +14,19 @@ h1 {
     margin: auto;
     font-size: 2.5em;
     font-weight: bold;
-    padding: 6px;
+    padding: 2px;
     letter-spacing: 1.5px;
     background-color: #E1B4CD;
     color: #4A4A4A;
+}
+
+h2 {
+    margin: auto;
+    font-size: 2.5em;
+    font-weight: bold;
+    padding: 6px;
+    letter-spacing: 1.5px;
+    color: #FFFFFF;
 }
 
 #container-popup {
@@ -44,7 +53,7 @@ h1 {
 }
 
 #popup img {
-	height: 100%;
+	height: 90%;
 }
 
 #container-thumbnails {
