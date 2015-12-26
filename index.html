@@ -1,29 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<title>Slack Code Example</title>
+    <title>Slack Code Example</title>
 
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="./style.css" >
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="./style.css">
 </head>
-<body onload="getData()">
-	<div>
-		<div id="container-popup">
-    		<div id="popup">
-    			<h2 id="image-title"></h2>
-    			<button type="button" class="exit-button" onClick="exitLightbox()">x</button>
-    			<button type="button" class="right-button" onClick="rightArrow()">→</button>
-    			<button type="button" class="left-button" onClick="leftArrow()">←</button>
-    			<img id="lightboxImage" alt="" />
-    		</div>
-		</div>
 
-		<h1>Lightbox: Kitten Edition</h1>
-		<div id="container-thumbnails" />
+<body onload="retrieveData()">
+    <div>
+        <div id="container-lightbox">
+            <div id="lightbox">
+                <h2 id="image-title"></h2>
+                <button type="button" class="exit-button" onClick="exitLightbox()">x</button>
+                <button type="button" class="right-button" onClick="nextImage()">→</button>
+                <button type="button" class="left-button" onClick="previousImage()">←</button>
+                <img id="lightbox-image" alt="" />
+            </div>
+        </div>
 
-		<script type="text/javascript" src="./main.js"></script>
-	</div>
+        <h1>Lightbox: Kitten Edition</h1>
+        <h3 id="loading-text">LOADING THUMBNAILS...</h3>
+        <div id="container-thumbnails" />
 
+
+        <script type="text/javascript" src="./main.js"></script>
+    </div>
 </body>
 
 </html>

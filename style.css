@@ -10,7 +10,7 @@ body {
 }
 
 h1 {
-    border-bottom: 3px solid #CD88AF; 
+    border-bottom: 3px solid #CD88AF;
     margin: auto;
     font-size: 2.5em;
     font-weight: bold;
@@ -22,26 +22,49 @@ h1 {
 
 h2 {
     margin: auto;
-    font-size: 2.5em;
+    font-size: 2em;
     font-weight: bold;
     padding: 6px;
     letter-spacing: 1.5px;
     color: #FFFFFF;
 }
 
-#container-popup {
+h3 {
+    font-size: 1.8em;
+}
+
+#container-thumbnails {
+    width: 99%;
+    margin: 0 auto;
+    margin-top: 15px;
+    vertical-align: center;
+    text-align: center;
+}
+
+.thumbnail {
+    vertical-align: middle;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+}
+
+#container-lightbox {
     position: relative;
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    background: rgba(0,0,0,.82);
+    background: rgba(0, 0, 0, .82);
     display: none;
 }
 
-#popup {
-	text-align: center;
+#lightbox {
+    text-align: center;
     height: 80%;
     width: 80%;
     position: absolute;
@@ -52,61 +75,45 @@ h2 {
     margin: auto;
 }
 
-#popup img {
-	height: 90%;
-}
-
-#container-thumbnails {
-    width: 90%;
-    margin: 0 auto;
-    overflow: hidden;
-    vertical-align: center;
-    text-align: center;
+#lightbox img {
+    height: 90%;
 }
 
 .exit-button {
-  background-color: #FF4545;
-  color: #FFFFFF;
-  height: 30px;
-  width: 30px;
-  top: 0;
-  right: 0;
-  font-size: 20px;
-  position: absolute;
-  border: none;
-  outline: none;
-}
-.right-button {
-  background-color: #FF4545;
-  color: #FFFFFF;
-  height: 30px;
-  width: 30px;
-  top: 50%;
-  right: 0;
-  font-size: 20px;
-  position: absolute;
-  border: none;
-  outline: none;
-}
-.left-button {
-  background-color: #FF4545;
-  color: #FFFFFF;
-  height: 30px;
-  width: 30px;
-  top: 50%;
-  left: 0;
-  font-size: 20px;
-  position: absolute;
-  border: none;
-  outline: none;
+    background-color: #FF4545;
+    color: #FFFFFF;
+    height: 30px;
+    width: 30px;
+    top: 0;
+    right: 0;
+    font-size: 20px;
+    position: absolute;
+    border: none;
+    outline: none;
 }
 
-.thumbnail {
-    vertical-align: middle;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    width: 150px;
-    overflow: hidden;
+.right-button {
+    background-color: #FF4545;
+    color: #FFFFFF;
+    height: 30px;
+    width: 30px;
+    top: 50%;
+    right: 0;
+    font-size: 20px;
+    position: absolute;
+    border: none;
+    outline: none;
+}
+
+.left-button {
+    background-color: #FF4545;
+    color: #FFFFFF;
+    height: 30px;
+    width: 30px;
+    top: 50%;
+    left: 0;
+    font-size: 20px;
+    position: absolute;
+    border: none;
+    outline: none;
 }
