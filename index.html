@@ -8,19 +8,25 @@
     <link rel="stylesheet" type="text/css" href="./style.css">
 </head>
 
-<body onload="retrieveData()">
+<body>
     <div>
         <div id="container-lightbox">
             <div id="lightbox">
                 <h2 id="image-title"></h2>
-                <button type="button" class="exit-button" onClick="exitLightbox()">x</button>
-                <button type="button" class="right-button" onClick="nextImage()">→</button>
-                <button type="button" class="left-button" onClick="previousImage()">←</button>
+                <button type="button" id="exit-button" onClick="exitLightbox()">x</button>
+                <button type="button" id="right-button" onClick="nextImage()">→</button>
+                <button type="button" id="left-button" onClick="previousImage()">←</button>
                 <img id="lightbox-image" alt="" />
             </div>
         </div>
 
-        <h1>Lightbox: Kitten Edition</h1>
+        <h1>Code Example: Lightbox</h1>
+        <div id="container-query">
+        	<form onsubmit="retrieveData(); return false;">
+		        <h4>Search: <input type="text" id="query" />
+		        <input type="submit" value="Go!"/></h4>
+	    	</form>
+	    </div>
         <h3 id="loading-text">LOADING THUMBNAILS...</h3>
         <div id="container-thumbnails" />
 

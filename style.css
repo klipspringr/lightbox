@@ -10,13 +10,13 @@ body {
 }
 
 h1 {
-    border-bottom: 3px solid #CD88AF;
+    border-bottom: 3px solid #F7C6CD;
     margin: auto;
     font-size: 2.5em;
     font-weight: bold;
     padding: 2px;
     letter-spacing: 1.5px;
-    background-color: #E1B4CD;
+    background-color: #FBE3E7;
     color: #4A4A4A;
 }
 
@@ -31,6 +31,20 @@ h2 {
 
 h3 {
     font-size: 1.8em;
+}
+
+input {
+    font-size: 1em;
+    outline: none;
+}
+
+button {
+    font-size: 1em;
+    outline: none;
+}
+
+#loading-text {
+    display: none;
 }
 
 #container-thumbnails {
@@ -79,7 +93,7 @@ h3 {
     height: 90%;
 }
 
-.exit-button {
+#exit-button {
     background-color: #FF4545;
     color: #FFFFFF;
     height: 30px;
@@ -92,7 +106,7 @@ h3 {
     outline: none;
 }
 
-.right-button {
+#right-button {
     background-color: #FF4545;
     color: #FFFFFF;
     height: 30px;
@@ -105,7 +119,7 @@ h3 {
     outline: none;
 }
 
-.left-button {
+#left-button {
     background-color: #FF4545;
     color: #FFFFFF;
     height: 30px;
