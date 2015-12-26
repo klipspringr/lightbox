@@ -1,4 +1,4 @@
-var picList = null;
+var picList = [];
 var lightboxDiv = document.getElementById("container-lightbox");
 var lightboxImage = document.getElementById("lightbox-image");
 var imageTitle = document.getElementById("image-title");
@@ -13,63 +13,63 @@ function retrieveData() {
     var query = document.getElementById("query").value.trim();
     var thumbnailContainer = document.getElementById("container-thumbnails");
     if (query) {
-	    var url = "https://www.flickr.com/services/rest/?method=flickr.photos.search" + 
-	    		  "&api_key=f0acf8413c19cafc668726c43a93c6cf&format=json&safe_search=1&" +
-	    		  "content_type=1&sort=relevance&extras=url_q&page=1&per_page=28&nojsoncallback=1" +
-	    		  "&text=" + query;
+        var url =
+            "https://www.flickr.com/services/rest/?method=flickr.photos.search" +
+            "&api_key=f0acf8413c19cafc668726c43a93c6cf&format=json&safe_search=1&" +
+            "content_type=1&sort=relevance&extras=url_q&page=1&per_page=28&nojsoncallback=1" +
+            "&text=" + query;
 
-	    loadingText.style.display = "block";
-	    
-	    while (thumbnailContainer.firstChild) {
-	    	thumbnailContainer.removeChild(thumbnailContainer.firstChild);
-	    }
-
-	    request.open('GET', url, true);
-
-	    request.onload = function() {
-	        if (request.status >= 200 && request.status < 400) {
-	            // Data has been successfully retrieved.
-	            var response = JSON.parse(request.responseText);
-	            displayThumbnails(response);
-	        } else {
-	            // The server has returned an error.
-	            console.log("The server has returned an error.");
-	        }
-	    };
-
-	    request.onerror = function() {
-	        // The connection has returned an error.
-	        console.log("The connection has returned an error.");
-	    };
-
-	    request.send();    	
+        loadingText.style.display = "block";
+        while (thumbnailContainer.firstChild) {
+            thumbnailContainer.removeChild(thumbnailContainer.firstChild);
+        }
+        picList = [];
+        request.open('GET', url, true);
+        request.onload = function() {
+            if (request.status >= 200 && request.status < 400) {
+                // Data has been successfully retrieved.
+                var response = JSON.parse(request.responseText);
+                displayThumbnails(response);
+            } else {
+                // The server has returned an error.
+                console.log("The server has returned an error.");
+            }
+        };
+        request.onerror = function() {
+            // The connection has returned an error.
+            console.log("The connection has returned an error.");
+        };
+        request.send();
     }
 }
 
 function displayThumbnails(response) {
-    picList = response.photos.photo;
+    var responseList = response.photos.photo;
     var thumbnailContainer = document.getElementById("container-thumbnails");
+    for (var i in responseList) {
+    	if (responseList[i].url_q) {
+    		picList.push(responseList[i]);
 
-    for (var i in picList) {
-        var thumbnail = document.createElement("img");
-        thumbnail.setAttribute("src", picList[i].url_q);
-        thumbnail.setAttribute("id", i);
-        thumbnail.setAttribute("class", "thumbnail");
-        thumbnail.setAttribute("onclick", "openLightbox('" + picList[i].url_q + "'," 
-        	+ i + ",'" + picList[i].title.replace(/'/g, "\\'") + "')");
-        thumbnailContainer.appendChild(thumbnail);
+	        var thumbnail = document.createElement("img");
+	        thumbnail.setAttribute("src", responseList[i].url_q);
+	        thumbnail.setAttribute("id", i);
+	        thumbnail.setAttribute("class", "thumbnail");
+	        thumbnail.setAttribute("onclick", "openLightbox('" + responseList[i].url_q +
+	            "'," + i + ",'" + responseList[i].title.replace(/'/g, "\\'") +
+	            "')");
+	        thumbnailContainer.appendChild(thumbnail);    		
+    	}
     }
     loadingText.style.display = "none";
 }
 
 function openLightbox(url, id, title) {
-    lightboxDiv.style.display = "block";
-    lightboxImage.setAttribute("src", url.replace("_q.jpg", "_z.jpg"));
-    lightboxImage.setAttribute("alt", id);
-
-    checkID(lightboxImage.alt);
-    imageTitle.textContent = title;
-}
+        lightboxDiv.style.display = "block";
+        lightboxImage.setAttribute("src", url.replace("_q.jpg", "_z.jpg"));
+        lightboxImage.setAttribute("alt", id);
+        checkID(lightboxImage.alt);
+        imageTitle.textContent = title;
+    }
 
 //
 //		LIGHTBOX VIEW
@@ -84,19 +84,18 @@ function getImageTitle(id) {
 }
 
 function checkID(id) {
-	var rightButton = document.getElementById("right-button");
-	var leftButton = document.getElementById("left-button");
-
-	if (id == 0){
-		rightButton.style.display = "block";
-		leftButton.style.display = "none";
-	} else if (id == 27){
-		rightButton.style.display = "none";
-		leftButton.style.display = "block";
-	} else {
-		rightButton.style.display = "block";
-		leftButton.style.display = "block";
-	}
+    var rightButton = document.getElementById("right-button");
+    var leftButton = document.getElementById("left-button");
+    if (id == 0) {
+        rightButton.style.display = "block";
+        leftButton.style.display = "none";
+    } else if (id == picList.length - 1) {
+        rightButton.style.display = "none";
+        leftButton.style.display = "block";
+    } else {
+        rightButton.style.display = "block";
+        leftButton.style.display = "block";
+    }
 }
 
 function exitLightbox() {
@@ -107,13 +106,11 @@ function exitLightbox() {
 
 function nextImage() {
     var newID = parseInt(lightboxImage.alt) + 1;
-
-    if (newID < 28) {
+    if (newID < picList.length) {
         lightboxImage.setAttribute("src", getImageUrl(newID));
         lightboxImage.setAttribute("alt", newID);
         imageTitle.textContent = getImageTitle(newID);
-    } 
-
+    }
     checkID(lightboxImage.alt);
 }
 
@@ -125,6 +122,5 @@ function previousImage() {
         lightboxImage.setAttribute("alt", newID);
         imageTitle.textContent = getImageTitle(newID);
     }
-
     checkID(lightboxImage.alt);
 }

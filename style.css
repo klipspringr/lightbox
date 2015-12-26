@@ -51,23 +51,19 @@ button {
     width: 99%;
     margin: 0 auto;
     margin-top: 15px;
-    vertical-align: center;
+    vertical-align: middle;
     text-align: center;
 }
 
 .thumbnail {
     vertical-align: middle;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 10px;
     width: 150px;
     height: 150px;
     overflow: hidden;
 }
 
 #container-lightbox {
-    position: relative;
     position: fixed;
     top: 0;
     right: 0;
@@ -75,12 +71,13 @@ button {
     left: 0;
     background: rgba(0, 0, 0, .82);
     display: none;
+    text-align: center;
 }
 
 #lightbox {
     text-align: center;
-    height: 80%;
-    width: 80%;
+    height: 85%;
+    width: 85%;
     position: absolute;
     top: 0;
     right: 0;
@@ -90,7 +87,16 @@ button {
 }
 
 #lightbox img {
-    height: 90%;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: 60%;
+    max-height: 80%;
+    max-width: 90%;
+    text-align: center;
 }
 
 #exit-button {
