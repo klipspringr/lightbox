@@ -71,12 +71,12 @@ function retrieveData(request) {
                 displayThumbnails(response); // Send response to displayThumbnails() for parsing.
             } else {
                 // The server has returned an error.
-                console.log("The server has returned an error.");
+                // console.log("The server has returned an error.");
             }
         };
         request.onerror = function() {
             // The connection has returned an error.
-            console.log("The connection has returned an error.");
+            // console.log("The connection has returned an error.");
         };
         request.send();
     }
