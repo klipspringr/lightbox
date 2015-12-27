@@ -18,32 +18,29 @@ var loadingText = document.getElementById("loading-text");
 //
 
 /**
- * Retrieves data according to query specified in "query" input element.
+ * Prepares elements on page for an incoming HTTP request.
  *
  *
  */
-function retrieveData() {
+function prepareRequest() {
     var request = new XMLHttpRequest();
     var query = document.getElementById("query").value.trim();
     var thumbnailContainer = document.getElementById("container-thumbnails");
 
     if (query) { // Make a request only if the query element has a value.
         var url =
-            // This url was split up for readability.
-            "https://www.flickr.com/services/rest/?method=flickr.photos.search" +
-            "&api_key=f0acf8413c19cafc668726c43a93c6cf&format=json&safe_search=1&" +
-            "content_type=1&sort=relevance&extras=url_q&page=1&per_page=28&nojsoncallback=1" +
-            "&text=" + query;
-        // PARAMS FOR REQUEST:
-        //  Method: Flickr's Photo Search
-        //  Format: JSON
-        //  Safe Search: On
-        //  Content Type: Photos only
-        //  Sort [Content by]: Relevance
-        //  Extras (Data to be Returned): URL (url_q, a 150px x 150px image)
-        //  Pages & Images per Page: 1, 28 (28 total items returned)
-        //  NoJSONCallback: return data as a JSON object
-        //  Query: Query specified in query element
+            // This url is split up for readability.
+            "https://www.flickr.com/services/rest/" + 
+            "?method=flickr.photos.search" +                
+            "&api_key=f0acf8413c19cafc668726c43a93c6cf" +   
+            "&format=json" +                               
+            "&safe_search=1" +                             
+            "&content_type=1" +        //  Method: Flickr's Photo Search                    
+            "&sort=relevance" +        //  Documentation can be found at:                 
+            "&extras=url_q" +          //  https://www.flickr.com/services/api/flickr.photos.search.html                  
+            "&page=1&per_page=28" +                       
+            "&nojsoncallback=1" +                       
+            "&text=" + query;                            
 
         loadingText.style.display = "block"; // While the request is being prepared,
                                              // show the loading text.
@@ -57,7 +54,15 @@ function retrieveData() {
         picList = [];
         // When multiple queries are entered, all irrelevant 
         // images need to be removed from the picList store.
+        retrieveData(request);
+}
 
+/**
+ * Retrieves data by sending HTML request as specified in parameter.
+ *
+ *
+ */
+function retrieveData(request) {
         request.open('GET', url, true); // Begin setting up the HTTP request.
         request.onload = function() {
             if (request.status >= 200 && request.status < 400) {
@@ -92,15 +97,17 @@ function displayThumbnails(response) {
 
             picList.push(responseList[i]); // Because some of the response data lacked URLs, a 
                                            // a store of all the available images had to be made.
-
+            var thumbnailWrapper = document.createElement("a");
+            thumbnailWrapper.setAttribute("href", "#");  
+            thumbnailWrapper.setAttribute("onclick", "openLightbox('" + responseList[i].url_q +
+                "'," + i + ",'" + responseList[i].title.replace(/'/g, "\\'") +
+                "')");                                         
             var thumbnail = document.createElement("img");
             thumbnail.setAttribute("src", responseList[i].url_q);
             thumbnail.setAttribute("id", i); // The image's position in the gallery is stored in its ID.
             thumbnail.setAttribute("class", "thumbnail");
-            thumbnail.setAttribute("onclick", "openLightbox('" + responseList[i].url_q +
-                "'," + i + ",'" + responseList[i].title.replace(/'/g, "\\'") +
-                "')");
-            thumbnailContainer.appendChild(thumbnail);
+            thumbnailWrapper.appendChild(thumbnail); // Wrap the image in an <a> tag
+            thumbnailContainer.appendChild(thumbnailWrapper);
         }
     }
     loadingText.style.display = "none"; 
@@ -118,10 +125,10 @@ function openLightbox(url, id, title) {
     // the exception of one character. EXAMPLE: 123_q.jpg (Thumbnail) -> 123_z.jpg (Larger version)
     // Originally, I got URL_z from the API. However, the API sometimes failed to 
     // return this parameter. Thus, manually changing the URL was necessary.
-    lightboxImage.setAttribute("alt", id); // The image's ID is stored in alt.
+    lightboxImage.setAttribute("data-id", id); // The image's ID is stored in data-id.
     imageTitle.textContent = title;
 
-    checkID(lightboxImage.alt); // Check image's ID for toggling the left and right arrow buttons.
+    checkID(lightboxImage.dataset.id); // Check image's ID for toggling the left and right arrow buttons.
 }
 
 //
@@ -180,7 +187,7 @@ function checkID(id) {
 function exitLightbox() {
     lightboxDiv.style.display = "none";
     lightboxImage.setAttribute("src", "");
-    lightboxImage.setAttribute("alt", "");
+    lightboxImage.setAttribute("data-id", "");
 }
 
 /**
@@ -189,14 +196,14 @@ function exitLightbox() {
  * 
  */
 function previousImage() {
-    var newID = parseInt(lightboxImage.alt) - 1; // Set the new ID of the Lightbox image to previous image.
+    var newID = parseInt(lightboxImage.dataset.id) - 1; // Set the new ID of the Lightbox image to previous image.
 
     if (newID > -1) { // Only move to the previous image if it's not the first image.
         lightboxImage.setAttribute("src", getImageUrl(newID));
-        lightboxImage.setAttribute("alt", newID);
+        lightboxImage.setAttribute("data-id", newID);
         imageTitle.textContent = getImageTitle(newID);
     }
-    checkID(lightboxImage.alt); // Check image's ID for toggling the left and right arrow buttons.
+    checkID(lightboxImage.dataset.id); // Check image's ID for toggling the left and right arrow buttons.
 }
 
 /**
@@ -205,14 +212,14 @@ function previousImage() {
  * 
  */
 function nextImage() {
-    var newID = parseInt(lightboxImage.alt) + 1; // Set the new ID of the Lightbox image to next image.
+    var newID = parseInt(lightboxImage.dataset.id) + 1; // Set the new ID of the Lightbox image to next image.
 
     if (newID < picList.length) { // Only move to the next image if it's not the last image.
         lightboxImage.setAttribute("src", getImageUrl(newID));
-        lightboxImage.setAttribute("alt", newID);
+        lightboxImage.setAttribute("data-id", newID);
         imageTitle.textContent = getImageTitle(newID);
     }
-    checkID(lightboxImage.alt); // Check image's ID for toggling the left and right arrow buttons.
+    checkID(lightboxImage.dataset.id); // Check image's ID for toggling the left and right arrow buttons.
 }
 
 document.onkeydown = checkKey;  // Register the event handler for key presses.
