@@ -24,10 +24,10 @@ var loadingText = document.getElementById("loading-text");
  */
 function prepareRequest() {
     var request = new XMLHttpRequest();
-    var query = document.getElementById("query").value.trim();
+    var queryElement = document.getElementById("query").value.trim();
     var thumbnailContainer = document.getElementById("container-thumbnails");
 
-    if (query) { // Make a request only if the query element has a value.
+    if (queryElement) { // Make a request only if the query element has a value.
         var url =
             // This url is split up for readability.
             "https://www.flickr.com/services/rest/" + 
@@ -40,7 +40,7 @@ function prepareRequest() {
             "&extras=url_q" +          //  https://www.flickr.com/services/api/flickr.photos.search.html                  
             "&page=1&per_page=28" +                       
             "&nojsoncallback=1" +                       
-            "&text=" + query;                            
+            "&text=" + queryElement;                            
 
         loadingText.style.display = "block"; // While the request is being prepared,
                                              // show the loading text.
