@@ -29,7 +29,7 @@ function retrieveData() {
 
     if (query) { // Make a request only if the query element has a value.
         var url =
-            // This url was really long. I split it up for readability.
+            // This url was split up for readability.
             "https://www.flickr.com/services/rest/?method=flickr.photos.search" +
             "&api_key=f0acf8413c19cafc668726c43a93c6cf&format=json&safe_search=1&" +
             "content_type=1&sort=relevance&extras=url_q&page=1&per_page=28&nojsoncallback=1" +
@@ -39,10 +39,11 @@ function retrieveData() {
         //  Format: JSON
         //  Safe Search: On
         //  Content Type: Photos only
-        //  Sort Content by: Relevance
-        //  Extra Data to be Returned: URL (url_q, a 150px x 150px image)
+        //  Sort [Content by]: Relevance
+        //  Extras (Data to be Returned): URL (url_q, a 150px x 150px image)
         //  Pages & Images per Page: 1, 28 (28 total items returned)
         //  NoJSONCallback: return data as a JSON object
+        //  Query: Query specified in query element
 
         loadingText.style.display = "block"; // While the request is being prepared,
                                              // show the loading text.
@@ -62,8 +63,7 @@ function retrieveData() {
             if (request.status >= 200 && request.status < 400) {
                 // Data has been successfully retrieved.
                 var response = JSON.parse(request.responseText);
-                displayThumbnails(response);
-                // Send response to displayThumbnails() for parsing.
+                displayThumbnails(response); // Send response to displayThumbnails() for parsing.
             } else {
                 // The server has returned an error.
                 console.log("The server has returned an error.");
@@ -87,9 +87,8 @@ function displayThumbnails(response) {
     var thumbnailContainer = document.getElementById("container-thumbnails");
 
     for (var i in responseList) {
-        if (responseList[i].url_q) { // I had some issues with the Flickr API. Sometimes
-                                     // the response data lacked the specified parameters. This if
-                                     // statement is in place to ensure the API returned a URL.
+        if (responseList[i].url_q) { // Sometimes the API's response data lacked the 
+                                     // specified parameters. This checks that the API returned a URL.
 
             picList.push(responseList[i]); // Because some of the response data lacked URLs, a 
                                            // a store of all the available images had to be made.
@@ -100,25 +99,25 @@ function displayThumbnails(response) {
             thumbnail.setAttribute("class", "thumbnail");
             thumbnail.setAttribute("onclick", "openLightbox('" + responseList[i].url_q +
                 "'," + i + ",'" + responseList[i].title.replace(/'/g, "\\'") +
-                "')"); // When an image is clicked, open the Lightbox view.
+                "')");
             thumbnailContainer.appendChild(thumbnail);
         }
     }
-    loadingText.style.display = "none"; // When all thumbnails have been added, hide the loading text.
+    loadingText.style.display = "none"; 
 }
 
 /**
  * If an image is clicked, this function is called to change the thumbnail view to 
- * the lightbox view.
+ * the lightbox view. This function is called by each thumbnail's onclick attribute.
  *
  */
 function openLightbox(url, id, title) {
     lightboxDiv.style.display = "block";
     lightboxImage.setAttribute("src", url.replace("_q.jpg", "_z.jpg"));
-    // The source of the Lightbox image has the same url as the thumbnail image, with the 
-    // the exception of the character after the underscore. (EX: 123_q.jpg -> 123_z.jpg)
-    // Originally, this project was written to get the URL_z from the API. However, the API
-    // sometimes failed to return this. Thus, manually changing the URL was necessary.
+    // The src of the Lightbox image has the same src as the thumbnail image, with the 
+    // the exception of one character. EXAMPLE: 123_q.jpg (Thumbnail) -> 123_z.jpg (Larger version)
+    // Originally, I got URL_z from the API. However, the API sometimes failed to 
+    // return this parameter. Thus, manually changing the URL was necessary.
     lightboxImage.setAttribute("alt", id); // The image's ID is stored in alt.
     imageTitle.textContent = title;
 
@@ -216,17 +215,16 @@ function nextImage() {
     checkID(lightboxImage.alt); // Check image's ID for toggling the left and right arrow buttons.
 }
 
-document.onkeydown = checkKey;  // Register the event handler: when a key is pressed, 
-                                // call the checkKey function.
+document.onkeydown = checkKey;  // Register the event handler for key presses.
 
 /**
- * Changes the Lightbox image to the previous image when the left arrow button is clicked.
+ * Changes the Lightbox image to the previous image when the left arrow button is pressed.
  *                  
  * 
  */
 function checkKey(e) {
-    e = e || window.event;   // if e is undefined, set it equal to window.event 
-                             // (compatibility for older versions of IE)
+    e = e || window.event;   // If e is undefined, set it equal to window.event.
+
     if (e.keyCode == '37') { // If the left arrow key button is pressed, move to the previous image.
         previousImage();
     }
