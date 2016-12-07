@@ -2,115 +2,47 @@
 //      ELEMENTS & VARIABLES
 //
 
-var picList = [];
-// An array containing all information about the queried images.
 var lightboxDiv = document.getElementById("container-lightbox");
-// A div that controls the lightbox pop-up.
+// A div that contains the lightbox pop-up.
 var lightboxImage = document.getElementById("lightbox-image");
 // The image displayed in the lightbox pop-up.
 var imageTitle = document.getElementById("image-title");
-// The title of the lightbox image.
-var loadingText = document.getElementById("loading-text");
-// The text that is shown when data is being retrieved.
+// The title of the image.
+var picList = { "projects": 
+                [
+                    {"title": "Dogs","image": "./img/dog.jpg"},
+                    {"title": "Cats","image": "./img/cat.jpg"}
+]};
+// An array containing all information about the queried images.
+
 
 //
 //      GALLERY VIEW
 //
 
+
 /**
- * Prepares elements on page for an incoming HTTP request.
+ * Displays thumbnails of the data in picList.
  *
  *
  */
-function prepareRequest() {
-    var request = new XMLHttpRequest();
-    var queryElement = document.getElementById("query").value.trim();
+function displayThumbnails() {
     var thumbnailContainer = document.getElementById("container-thumbnails");
 
-    if (queryElement) { // Make a request only if the query element has a value.
-        var url =
-            // This url is split up for readability.
-            "https://www.flickr.com/services/rest/" + 
-            "?method=flickr.photos.search" +                
-            "&api_key=f0acf8413c19cafc668726c43a93c6cf" +   
-            "&format=json" +                               
-            "&safe_search=1" +                             
-            "&content_type=1" +        //  Method: Flickr's Photo Search                    
-            "&sort=relevance" +        //  Documentation can be found at:                 
-            "&extras=url_q" +          //  https://www.flickr.com/services/api/flickr.photos.search.html                  
-            "&page=1&per_page=28" +                       
-            "&nojsoncallback=1" +                       
-            "&text=" + queryElement;                            
-
-        loadingText.style.display = "block"; // While the request is being prepared,
-                                             // show the loading text.
-
-        while (thumbnailContainer.firstChild) {
-            thumbnailContainer.removeChild(thumbnailContainer.firstChild);
-            // When multiple queries are entered, all irrelevant 
-            // thumbnails need to be removed from the view.
-        }
-
-        picList = [];
-        // When multiple queries are entered, all irrelevant 
-        // images need to be removed from the picList store.
-        retrieveData(request);
-}
-
-/**
- * Retrieves data by sending HTML request as specified in parameter.
- *
- *
- */
-function retrieveData(request) {
-        request.open('GET', url, true); // Begin setting up the HTTP request.
-        request.onload = function() {
-            if (request.status >= 200 && request.status < 400) {
-                // Data has been successfully retrieved.
-                var response = JSON.parse(request.responseText);
-                displayThumbnails(response); // Send response to displayThumbnails() for parsing.
-            } else {
-                // The server has returned an error.
-                console.log("The server has returned an error.");
-            }
-        };
-        request.onerror = function() {
-            // The connection has returned an error.
-            console.log("The connection has returned an error.");
-        };
-        request.send();
-    }
-}
-
-/**
- * Displays thumbnails according to the response given by the retrieveData function.
- *
- *
- */
-function displayThumbnails(response) {
-    var responseList = response.photos.photo;
-    var thumbnailContainer = document.getElementById("container-thumbnails");
-
-    for (var i in responseList) {
-        if (responseList[i].url_q) { // Sometimes the API's response data lacked the 
-                                     // specified parameters. This checks that the API returned a URL.
-
-            picList.push(responseList[i]); // Because some of the response data lacked URLs, a 
-                                           // a store of all the available images had to be made.
+    for (var i in picList.projects) {
             var thumbnailWrapper = document.createElement("a");
             thumbnailWrapper.setAttribute("href", "#");  
-            thumbnailWrapper.setAttribute("onclick", "openLightbox('" + responseList[i].url_q +
-                "'," + i + ",'" + responseList[i].title.replace(/'/g, "\\'") +
+            thumbnailWrapper.setAttribute("onclick", "openLightbox('" + picList.projects[i].image +
+                "'," + i + ",'" + picList.projects[i].title.replace(/'/g, "\\'") +
                 "')");                                         
+
             var thumbnail = document.createElement("img");
-            thumbnail.setAttribute("src", responseList[i].url_q);
+            thumbnail.setAttribute("src", picList.projects[i].image);
             thumbnail.setAttribute("id", i); // The image's position in the gallery is stored in its ID.
             thumbnail.setAttribute("class", "thumbnail");
             thumbnailWrapper.appendChild(thumbnail); // Wrap the image in an <a> tag
             thumbnailContainer.appendChild(thumbnailWrapper);
-        }
     }
-    loadingText.style.display = "none"; 
 }
 
 /**
@@ -120,11 +52,7 @@ function displayThumbnails(response) {
  */
 function openLightbox(url, id, title) {
     lightboxDiv.style.display = "block";
-    lightboxImage.setAttribute("src", url.replace("_q.jpg", "_z.jpg"));
-    // The src of the Lightbox image has the same src as the thumbnail image, with the 
-    // the exception of one character. EXAMPLE: 123_q.jpg (Thumbnail) -> 123_z.jpg (Larger version)
-    // Originally, I got URL_z from the API. However, the API sometimes failed to 
-    // return this parameter. Thus, manually changing the URL was necessary.
+    lightboxImage.setAttribute("src", url);
     lightboxImage.setAttribute("data-id", id); // The image's ID is stored in data-id.
     imageTitle.textContent = title;
 
@@ -136,21 +64,21 @@ function openLightbox(url, id, title) {
 //
 
 /**
- * Returns the url_z (larger version of thumbnail) of the image with ID "id".
+ * Returns the image url attribute of the given id
  * @param string id                    
- * @return string url_z
+ * @return string url
  */
 function getImageUrl(id) {
-    return picList[id].url_q.replace("_q.jpg", "_z.jpg");
+    return picList.projects[id].image;
 }
 
 /**
- * Returns the title of the image with ID "id".
+ * Returns the title of the image with with the given id
  * @param string id                    
  * @return string title
  */
 function getImageTitle(id) {
-    return picList[id].title;
+    return picList.projects[id].title;
 }
 
 /**
@@ -167,7 +95,7 @@ function checkID(id) {
         // because there is no "previous" image.
         rightButton.style.display = "block";
         leftButton.style.display = "none";
-    } else if (id == picList.length - 1) {
+    } else if (id == picList.projects.length - 1) {
         // If the Lightbox image is the last image in the Gallery view, hide the right arrow button
         // because there is no 'next" image.        
         rightButton.style.display = "none";
@@ -214,7 +142,7 @@ function previousImage() {
 function nextImage() {
     var newID = parseInt(lightboxImage.dataset.id) + 1; // Set the new ID of the Lightbox image to next image.
 
-    if (newID < picList.length) { // Only move to the next image if it's not the last image.
+    if (newID < picList.projects.length) { // Only move to the next image if it's not the last image.
         lightboxImage.setAttribute("src", getImageUrl(newID));
         lightboxImage.setAttribute("data-id", newID);
         imageTitle.textContent = getImageTitle(newID);
@@ -239,3 +167,5 @@ function checkKey(e) {
         nextImage();
     }
 }
+
+displayThumbnails()
