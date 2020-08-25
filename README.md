@@ -3,7 +3,7 @@ A "lightbox" viewer for images. Built with native Javascript, HTML, and CSS.
 
 ### Get Started
 
-Head on over to [this link](klipspringr.github.io/lightbox) to check out a working demo.
+Head on over to [this link](http://teresaibarra.com/lightbox/) to check out a working demo.
 
 Alternatively, clone this repo and simply run the index.html file.
 
